@@ -6,6 +6,14 @@ const Category = () => import('views/category/Category')
 const Cart = () => import('views/cart/Cart')
 const Profile = () => import('views/profile/Profile')
 
+const RouterPush = VueRouter.prototype.push;
+const RouterReplace = VueRouter.prototype.replace;
+VueRouter.prototype.push = function push(location){
+  return RouterPush.call(this, location).catch(err => err);
+}
+VueRouter.prototype.replace = function replace(location){
+  return RouterReplace.call(this, location).catch(err => err);
+}
 
 Vue.use(VueRouter)
 
@@ -13,16 +21,20 @@ const routes = [
   {
     path: '',
     redirect: '/home'
-  }, {
+  }, 
+  {
     path: '/home',
     component: Home
-  }, {
+  }, 
+  {
     path: '/category',
     component: Category
-  }, {
+  }, 
+  {
     path: '/cart',
     component: Cart
-  }, {
+  }, 
+  {
     path: '/profile',
     component: Profile
   }

@@ -10,5 +10,5 @@ module.exports = {
         'views': '@/views',
       }
     }
-  }
+  },
 }
