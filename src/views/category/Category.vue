@@ -221,14 +221,22 @@
     },
     mounted(){
       this.bs = new BScroll(this.$refs.aaa, {
+        probeType: 3,
+        pullUpLoad: true
+      })
 
+      this.bs.on('scroll', position => {
+        // console.log(position);
+      })
+      this.bs.on('pullingUp', () => {
+        console.log('yes');
       })
     }
   }
 </script>
 
 <style scoped>
-.wrapper {
-  height: 250px;
-}
+  .wrapper {
+    height: 250px;
+  }
 </style>

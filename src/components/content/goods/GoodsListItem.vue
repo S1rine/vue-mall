@@ -1,6 +1,7 @@
 <template>
-  <div class="goods-item">
-    <img :src="goodsItem.show.img" alt="">
+  <div class="goods-item" @click="itemClick">
+    <img :src="goodsItem.show.img" alt="" @load="imageLoad">
+    <!-- img.onload 原生的图片加载完成事件 -->
     <div class="goods-info">
       <p class="title">{{goodsItem.title}}</p>
       <span class="price">{{'￥'+goodsItem.price}}</span>
@@ -20,16 +21,13 @@
         }
       }
     },
-    data(){
-      return {
-        
-      }
-    },
     methods: {
-      
-    },
-    components: {
-      
+      imageLoad(){
+        this.$bus.$emit('itemImageLoad')
+      },
+      itemClick(){
+        this.$router.push('/detail/'+this.goodsItem.iid);
+      },
     },
   }
 </script>

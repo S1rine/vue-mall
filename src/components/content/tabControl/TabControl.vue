@@ -30,9 +30,6 @@
         this.currentIndex = index;
         this.$emit('tabClick', index);
       }
-    },
-    components: {
-      
     }
   }
 </script>

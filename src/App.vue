@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <keep-alive>
+    <keep-alive exclude="Detail">
       <!-- 使用 keep-alive 暂时用来解决该项目在
            第一次打开时轮播图无法正常轮播
            以及组件切换时轮播图再次失效的问题 -->

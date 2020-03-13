@@ -2,8 +2,8 @@
   <div class="goods">
     <goods-list-item 
       :goodsItem="item" 
-      v-for="item in goods"
-      :key="item.link" />
+      v-for="(item, index) in goods"
+      :key="index" />
   </div>
 </template>
 
@@ -19,14 +19,6 @@
           return [];
         }
       }
-    },
-    data(){
-      return {
-        
-      }
-    },
-    methods: {
-      
     },
     components: {
       GoodsListItem
