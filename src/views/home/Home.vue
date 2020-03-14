@@ -161,7 +161,7 @@
 
     },
     activated(){
-      this.$refs.scroll.scrollTo(0, this.savedY, 0);
+      this.$refs.scroll.scrollTo(0, this.savedY, 10);
       this.$refs.scroll.refresh();
     },
     deactivated(){

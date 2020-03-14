@@ -6,7 +6,7 @@
     <slot name="indicator">
     </slot>
     <div class="indicator">
-      <slot name="indicator" v-if="showIndicator && slideCount>1">
+      <slot name="indicator" v-show="showIndicator && slideCount>1">
         <div 
         v-for="(item, index) in slideCount" 
         class="indi-item" 
@@ -54,7 +54,9 @@
 
         // 2.开启定时器
         this.startTimer();
-      }, 100)
+      }, 300)
+      // 时间从100修改为300 即可解决 进入首页轮播图
+      // 不轮播的bug 
     },
     methods: {
 		  /**
