@@ -1,5 +1,4 @@
-
-/src/network/request.js
+src/network/request.js
 .DS_Store
 node_modules
 /dist
