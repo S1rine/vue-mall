@@ -1,3 +1,5 @@
+
+/src/network/request.js
 .DS_Store
 node_modules
 /dist
@@ -20,5 +22,3 @@ yarn-error.log*
 *.sln
 *.sw?
 
-
-/src/network/request.js
