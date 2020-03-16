@@ -15,17 +15,19 @@
             :probe-type="3" 
             @scroll="contentScroll"
             :pullUpLoad="true"
+            :data="showGoods"
             @pullingUp="loadMore">
       <!-- 直接传入 probe-type 会导致 3 为字符串类型 -->
       <!-- 动态绑定传入就会是数字类型 -->
       <home-swiper :banners="banners"
-                   @swiperImageLoad="swiperImageLoad"></home-swiper>
+                  @swiperImageLoad="swiperImageLoad"></home-swiper>
       <home-recommend-view :recommends="recommends"></home-recommend-view>
       <home-feature-view></home-feature-view>
       <tab-control :titles="['流行','新款','精选']"
                   @tabClick="tabClick"
                   ref="tabControl"></tab-control>
       <goods-list :goods="showGoods"></goods-list>
+
     </scroll>
     <back-top @click.native="backClick" v-show="isBackTopShow" />
     <!-- .native 修饰符用于监听事件，vue 组件默认无法监听 -->
@@ -47,7 +49,7 @@
     getHomeMultidata,
     getHomeGoods
   } from 'network/home'
-  import { debounce } from '@/common/utils';
+  import {itemListenerMixin} from '@/common/mixin'
 
   export default {
     name: "Home",
@@ -151,22 +153,17 @@
       this.getHomeGoods('sell');
 
     },
-    mounted(){
-      // 监听事件总线中的图片加载完成事件
-      const refresh = debounce(this.$refs.scroll.refresh, 200);
-      this.$bus.$on('itemImageLoad', () => {
-        refresh();
-        // this.$refs.scroll.refresh();
-      })
-
-    },
+    mixins: [itemListenerMixin],
     activated(){
       this.$refs.scroll.scrollTo(0, this.savedY, 10);
       this.$refs.scroll.refresh();
     },
     deactivated(){
+      // 保存 y 值
       this.savedY = this.$refs.scroll.getScrollY();
       // this.$refs.scroll.refresh();
+      // 取消全局事件的监听
+      this.$bus.$off('itemImageLoad', this.itemImgListener)
     }
   }
 </script>
