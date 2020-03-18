@@ -1,6 +1,6 @@
 <template>
   <div class="goods-item" @click="itemClick">
-    <img :src="showImage" alt="" @load="imageLoad">
+    <img v-lazy="showImage" alt="" @load="imageLoad">
     <!-- img.onload 原生的图片加载完成事件 -->
     <div class="goods-info">
       <p class="title">{{goodsItem.title}}</p>

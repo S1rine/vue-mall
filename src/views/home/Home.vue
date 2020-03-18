@@ -49,7 +49,7 @@
     getHomeMultidata,
     getHomeGoods
   } from 'network/home'
-  import {itemListenerMixin} from '@/common/mixin'
+  import {itemListenerMixin, backTopMixin} from '@/common/mixin'
 
   export default {
     name: "Home",
@@ -62,7 +62,6 @@
       NavBar,
       GoodsList,
       Scroll,
-      BackTop,
     },
     data(){
       return {
@@ -125,16 +124,6 @@
         this.$refs.tabControl1.currentIndex = index;
         this.$refs.tabControl.currentIndex = index;
       },
-      backClick(){
-        this.$refs.scroll.scrollTo(0, 0, 500);
-      },
-      contentScroll(position){
-        // 判断 backTop 是否需要显示
-        this.isBackTopShow = (-position.y) > 1000
-        // console.log(position);
-        // 判断 tabControl 是否吸顶（display: flxed)
-        this.isTabFixed = (-position.y) > this.tabOffsetTop
-      },
       loadMore(){
         this.getHomeGoods(this.currentType);
         this.$refs.scroll.finishPullUp();
@@ -145,6 +134,13 @@
         // 所有组件都有一个属性 $el, 用于获取组件内部元素
         this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop;
       },
+      contentScroll(position) {
+        // 判断 backTop 是否需要显示
+        this.isBackTopShow = (-position.y) > 1000
+        // console.log(position);
+        // 判断 tabControl 是否吸顶（display: flxed)
+        this.isTabFixed = (-position.y) > this.tabOffsetTop
+      },
     },
     created(){
       this.getHomeMultidata();
@@ -153,7 +149,7 @@
       this.getHomeGoods('sell');
 
     },
-    mixins: [itemListenerMixin],
+    mixins: [itemListenerMixin, backTopMixin],
     activated(){
       this.$refs.scroll.scrollTo(0, this.savedY, 10);
       this.$refs.scroll.refresh();

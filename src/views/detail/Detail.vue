@@ -16,6 +16,9 @@
       <detail-comment-info ref="comment" :comment-info="commentInfo" />
       <goods-list ref="recommend" :goods="recommend" />
     </scroll>
+    <detail-bottom-bar @addCart="addToCart" />
+    <back-top @click.native="backClick" v-show="isBackTopShow" />
+    <!-- <toast :show="toastShow" :message="toastMessage" /> -->
   </div>
 </template>
 
@@ -27,13 +30,17 @@
   import DetailGoodsInfo from './childCmps/DetailGoodsInfo'
   import DetailParamInfo from './childCmps/DetailParamInfo'
   import DetailCommentInfo from './childCmps/DetailCommentInfo'
+  import DetailBottomBar from './childCmps/DetailBottomBar'
 
   import Scroll from 'components/common/scroll/Scroll'
   import GoodsList from 'content/goods/GoodsList'
+  // import Toast from 'common/toast/Toast'
 
   import {getDetail,getRecommend,Goods,Shop,GoodsParam} from 'network/detail'
-  import {itemListenerMixin} from '@/common/mixin'
+  import {itemListenerMixin, backTopMixin} from '@/common/mixin'
   import { debounce } from '@/common/utils'
+
+  import { mapActions } from 'vuex'
 
   export default {
     name: "Detail",
@@ -50,9 +57,13 @@
         themeTopYs: [],
         getThemeTopY: null,
         currentIndex: 0,
+        // toastShow: false,
+        // toastMessage: ''
       }
     },
     methods: {
+      ...mapActions(['addCart']),
+
       imageLoad(){
         this.refresh();
         this.getThemeTopY();
@@ -63,19 +74,41 @@
       contentScroll(pos){
         const positionY = -pos.y;
         let length = this.themeTopYs.length;
-        for(let i = 0;i<length;i++){
-          if((this.currentIndex !== i) && ((i < length - 1 && positionY >= this.themeTopYs[i] && positionY < this.themeTopYs[i+1]) 
-            || (i === length - 1 
-                && positionY >= this.themeTopYs[i]))){
-             this.currentIndex = i;
-             this.$refs.nav.currentIndex = this.currentIndex;
+        for(let i = 0;i<length - 1;i++){
+          if(this.currentIndex !== i && (positionY >= this.themeTopYs[i] && positionY < this.themeTopYs[i+1])){
+            this.currentIndex = i;
+            this.$refs.nav.currentIndex = this.currentIndex;
           }
         }
+        // 判断 backTop 是否需要显示
+        this.isBackTopShow = (positionY) > 1000
+        // console.log(position);
         // console.log(positionY);
         // console.log(this.themeTopYs[1]);
+      },
+      addToCart(){
+        // 获取购物车需要展示的信息
+        const product = {}
+        product.image = this.topImages[0]
+        product.title = this.goods.title;
+        product.desc = this.goods.desc;
+        product.price = this.goods.realPrice;
+        product.iid = this.iid;
+        
+        // 将商品添加到购物车
+        this.addCart(product).then(res => {
+          // this.toastShow = true;
+          // this.toastMessage = res;
+
+          // setTimeout(() => {
+          //   this.toastShow = false;
+          // }, 1500)
+          console.log(this.$toast);
+          this.$toast.toShow(res, 1500);
+        })
       }
     },
-    mixins: [itemListenerMixin],
+    mixins: [itemListenerMixin, backTopMixin],
     created(){
       this.iid = this.$route.params.iid;
       
@@ -108,6 +141,7 @@
         this.themeTopYs.push(this.$refs.param.$el.offsetTop);
         this.themeTopYs.push(this.$refs.comment.$el.offsetTop);
         this.themeTopYs.push(this.$refs.recommend.$el.offsetTop);
+        this.themeTopYs.push(Number.MAX_VALUE);
       }, 100)
     },
     mounted(){
@@ -128,8 +162,10 @@
       DetailGoodsInfo,
       DetailParamInfo,
       DetailCommentInfo,
+      DetailBottomBar,
       Scroll,
       GoodsList,
+      // Toast,
     },
   }
 </script>
