@@ -12,7 +12,9 @@ Vue.config.productionTip = false
 
 // 安装 toast 插件 => 调用 toast.install
 Vue.use(toast)
-Vue.use(VueLazyLoad)
+Vue.use(VueLazyLoad, {
+  loading: require('./assets/img/common/placeholder.png')
+})
 
 // 给 Vue 的原型挂载 $bus
 Vue.prototype.$bus = new Vue()
